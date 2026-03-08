@@ -47,13 +47,13 @@ jobs:
         run: go test -coverprofile=coverage.out ./...
 
       - name: SonarCloud Scan
-        uses: sonarsource/sonarqube-scan-action@master
+        uses: sonarsource/sonarqube-scan-action@v5.0.0
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           args: >
             -Dsonar.projectKey=go-project-244
-            -Dsonar.organization=masterdillett
+            -Dsonar.organization=misterDillett
             -Dsonar.sources=.
             -Dsonar.tests=.
             -Dsonar.test.inclusions=**/*_test.go
