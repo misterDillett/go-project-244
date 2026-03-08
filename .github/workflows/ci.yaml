@@ -44,7 +44,9 @@ jobs:
         run: make lint
 
       - name: Test with coverage
-        run: go test -coverprofile=coverage.out ./...
+        run: |
+          go test -v -coverprofile=coverage.out ./...
+          go tool cover -func=coverage.out
 
       - name: SonarCloud Scan
         uses: sonarsource/sonarqube-scan-action@v5.0.0
