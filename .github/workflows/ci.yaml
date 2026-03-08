@@ -57,8 +57,8 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           args: >
-            -Dsonar.projectKey=go-project-244
-            -Dsonar.organization=misterDillett
+            -Dsonar.projectKey=misterDillett_go-project-244
+            -Dsonar.organization=misterdillett
             -Dsonar.sources=.
             -Dsonar.tests=.
             -Dsonar.test.inclusions=**/*_test.go
