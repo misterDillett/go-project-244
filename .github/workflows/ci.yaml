@@ -1,3 +1,4 @@
+# .github/workflows/ci.yml
 name: CI
 
 on:
@@ -7,8 +8,9 @@ on:
     branches: [ main ]
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v3
 
@@ -20,21 +22,16 @@ jobs:
       - name: Install dependencies
         run: go mod download
 
-      - name: Run lint
+      - name: Install golangci-lint v2
         run: |
-          go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
-          make lint
+          curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.0.0
+          golangci-lint --version
+
+      - name: Run lint
+        run: make lint
 
       - name: Run tests
         run: make test
 
-      - name: Upload coverage to SonarQube
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          go test -coverprofile=coverage.out ./...
-          sonar-scanner \
-            -Dsonar.projectKey=your_project_key \
-            -Dsonar.sources=. \
-            -Dsonar.host.url=https://sonarqube.example.com \
-            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+      - name: Run tests with coverage
+        run: go test -coverprofile=coverage.out ./...
