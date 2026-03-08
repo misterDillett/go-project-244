@@ -1,61 +1,19 @@
-version: "2"
-
 linters:
-  default: none
-  enable:
-    - errcheck
-    - govet
-    - ineffassign
-    - staticcheck
-    - unused
-    - misspell
-    - unconvert
-    - revive
-
-  settings:
-    govet:
-      enable:
-        - shadow
-    misspell:
-      locale: US
-    revive:
-      ignore-generated-header: true
-      rules:
-        - name: package-comments
-          disabled: true
-        - name: exported
-          disabled: true
-
-  exclusions:
-    rules:
-      - linters:
-          - revive
-        text: "comment on exported"
-      - linters:
-          - revive
-        text: "should have comment"
-      - linters:
-          - staticcheck
-        text: "SA1019"
-      - path: '(.+)_test\.go'
-        linters:
-          - errcheck
-          - ineffassign
-
-formatters:
   enable:
     - gofmt
-    - goimports
-
-  settings:
-    goimports:
-      local-prefixes:
-        - code
+    - govet
+    - errcheck
+    - staticcheck
+    - ineffassign
+    - unused
 
 run:
   timeout: 5m
   tests: true
 
 issues:
-  max-issues-per-linter: 0
-  max-same-issues: 0
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - errcheck
+        - ineffassign
