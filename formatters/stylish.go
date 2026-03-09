@@ -33,20 +33,20 @@ func render(nodes []*models.Node, depth int) (string, error) {
 		switch node.Type {
 		case "nested":
 			childStr, _ := render(node.Children, depth+1)
-			b.WriteString(fmt.Sprintf("%s  %s: %s\n", base, node.Key, childStr))
+			fmt.Fprintf(&b, "%s  %s: %s\n", base, node.Key, childStr)
 		case "unchanged":
-			b.WriteString(fmt.Sprintf("%s  %s: %s\n", base, node.Key, stringify(node.OldValue, depth+1)))
+			fmt.Fprintf(&b, "%s  %s: %s\n", base, node.Key, stringify(node.OldValue, depth+1))
 		case "removed":
 			val := stringify(node.OldValue, depth+1)
-			b.WriteString(fmt.Sprintf("%s- %s: %s\n", base, node.Key, val))
+			fmt.Fprintf(&b, "%s- %s: %s\n", base, node.Key, val)
 		case "added":
 			val := stringify(node.NewValue, depth+1)
-			b.WriteString(fmt.Sprintf("%s+ %s: %s\n", base, node.Key, val))
+			fmt.Fprintf(&b, "%s+ %s: %s\n", base, node.Key, val)
 		case "changed":
 			oldVal := stringify(node.OldValue, depth+1)
 			newVal := stringify(node.NewValue, depth+1)
-			b.WriteString(fmt.Sprintf("%s- %s: %s\n", base, node.Key, oldVal))
-			b.WriteString(fmt.Sprintf("%s+ %s: %s\n", base, node.Key, newVal))
+			fmt.Fprintf(&b, "%s- %s: %s\n", base, node.Key, oldVal)
+			fmt.Fprintf(&b, "%s+ %s: %s\n", base, node.Key, newVal)
 		}
 	}
 
@@ -72,7 +72,7 @@ func stringify(value interface{}, depth int) string {
 		var b strings.Builder
 		b.WriteString("{\n")
 		for _, k := range keys {
-			b.WriteString(fmt.Sprintf("%s%s: %s\n", valueIndent, k, stringify(m[k], depth+1)))
+			fmt.Fprintf(&b, "%s%s: %s\n", valueIndent, k, stringify(m[k], depth+1))
 		}
 		b.WriteString(closingIndent + "}")
 		return b.String()
