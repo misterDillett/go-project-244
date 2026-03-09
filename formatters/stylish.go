@@ -1,11 +1,10 @@
 package formatters
 
 import (
+	"code/models"
 	"fmt"
 	"sort"
 	"strings"
-
-	"code/models"
 )
 
 const indentSize = 4
@@ -26,6 +25,7 @@ func FormatStylish(nodes []*models.Node) string {
 func render(nodes []*models.Node, depth int) (string, error) {
 	base := indent(depth)
 	closeIndent := strings.Repeat(" ", (depth-1)*indentSize)
+
 	var b strings.Builder
 	b.WriteString("{\n")
 
@@ -66,6 +66,7 @@ func stringify(value interface{}, depth int) string {
 	if value == nil {
 		return "null"
 	}
+
 	if m, ok := value.(map[string]interface{}); ok {
 		keys := make([]string, 0, len(m))
 		for k := range m {
@@ -73,13 +74,15 @@ func stringify(value interface{}, depth int) string {
 		}
 		sort.Strings(keys)
 
+		valueIndent := strings.Repeat(" ", depth*indentSize)
+		closingIndent := strings.Repeat(" ", (depth-1)*indentSize)
+
 		var b strings.Builder
 		b.WriteString("{\n")
-		valueIndent := strings.Repeat("  ", depth*indentSize)
 		for _, k := range keys {
 			b.WriteString(fmt.Sprintf("%s%s: %s\n", valueIndent, k, stringify(m[k], depth+1)))
 		}
-		b.WriteString(strings.Repeat("  ", (depth-1)*indentSize) + "}")
+		b.WriteString(closingIndent + "}")
 		return b.String()
 	}
 
@@ -87,6 +90,6 @@ func stringify(value interface{}, depth int) string {
 	case string:
 		return v
 	default:
-		return fmt.Sprintf("%v", v)
+		return fmt.Sprintf("%v", value)
 	}
 }
