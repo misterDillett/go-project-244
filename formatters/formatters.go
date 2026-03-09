@@ -6,7 +6,6 @@ import (
 	"code/models"
 )
 
-// Format выбирает нужный форматтер и применяет его к дереву различий
 func Format(diff []*models.Node, format string) (string, error) {
 	switch format {
 	case "stylish":
@@ -20,7 +19,6 @@ func Format(diff []*models.Node, format string) (string, error) {
 	}
 }
 
-// formatValue используется только для plain и json форматов
 func formatValue(value interface{}) string {
 	switch v := value.(type) {
 	case nil:
