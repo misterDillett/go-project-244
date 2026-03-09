@@ -38,22 +38,14 @@ func render(nodes []*models.Node, depth int) (string, error) {
 			b.WriteString(fmt.Sprintf("%s  %s: %s\n", base, node.Key, stringify(node.OldValue, depth+1)))
 		case "removed":
 			val := stringify(node.OldValue, depth+1)
-			if val == "" {
-				b.WriteString(fmt.Sprintf("%s- %s:\n", base, node.Key))
-			} else {
-				b.WriteString(fmt.Sprintf("%s- %s: %s\n", base, node.Key, val))
-			}
+			b.WriteString(fmt.Sprintf("%s- %s: %s\n", base, node.Key, val))
 		case "added":
 			val := stringify(node.NewValue, depth+1)
 			b.WriteString(fmt.Sprintf("%s+ %s: %s\n", base, node.Key, val))
 		case "changed":
 			oldVal := stringify(node.OldValue, depth+1)
 			newVal := stringify(node.NewValue, depth+1)
-			if oldVal == "" {
-				b.WriteString(fmt.Sprintf("%s- %s:\n", base, node.Key))
-			} else {
-				b.WriteString(fmt.Sprintf("%s- %s: %s\n", base, node.Key, oldVal))
-			}
+			b.WriteString(fmt.Sprintf("%s- %s: %s\n", base, node.Key, oldVal))
 			b.WriteString(fmt.Sprintf("%s+ %s: %s\n", base, node.Key, newVal))
 		}
 	}
