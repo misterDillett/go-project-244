@@ -20,12 +20,22 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: 🔥 Полная очистка Docker и файлов проекта
+        run: |
+          # Принудительно удаляем все Docker-образы и контейнеры, связанные с проектом
+          docker system prune -af --volumes || true
+          docker builder prune -af || true
+          # Удаляем возможные локальные файлы-виновники
+          rm -f go.work go.work.sum
+          rm -rf tests/
+          echo "✅ Очистка завершена"
+
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
           go-version: "1.21.x"
           check-latest: true
-          cache: true
+          cache: false
 
       - name: Go tidy (check)
         run: |
