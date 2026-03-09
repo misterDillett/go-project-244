@@ -20,25 +20,31 @@ func FormatStylish(nodes []*models.Node, depth ...int) string {
 	for _, node := range nodes {
 		switch node.Type {
 		case "added":
-			result = append(result, fmt.Sprintf("%s  + %s: %s", indent, node.Key, stringify(node.NewValue, currentDepth+1)))
+			val := stringify(node.NewValue, currentDepth+1)
+			result = append(result, fmt.Sprintf("%s  + %s: %s", indent, node.Key, val))
+
 		case "removed":
 			val := stringify(node.OldValue, currentDepth+1)
+			// ✅ Если строковое представление пустое — не добавляем пробел после двоеточия
 			if val == "" {
 				result = append(result, fmt.Sprintf("%s  - %s:", indent, node.Key))
 			} else {
 				result = append(result, fmt.Sprintf("%s  - %s: %s", indent, node.Key, val))
 			}
+
 		case "unchanged":
 			result = append(result, fmt.Sprintf("%s    %s: %s", indent, node.Key, stringify(node.OldValue, currentDepth+1)))
+
 		case "changed":
 			oldVal := stringify(node.OldValue, currentDepth+1)
-			newVal := stringify(node.NewValue, currentDepth+1)
 			if oldVal == "" {
 				result = append(result, fmt.Sprintf("%s  - %s:", indent, node.Key))
 			} else {
 				result = append(result, fmt.Sprintf("%s  - %s: %s", indent, node.Key, oldVal))
 			}
+			newVal := stringify(node.NewValue, currentDepth+1)
 			result = append(result, fmt.Sprintf("%s  + %s: %s", indent, node.Key, newVal))
+
 		case "nested":
 			nested := FormatStylish(node.Children, currentDepth+1)
 			result = append(result, fmt.Sprintf("%s    %s: %s", indent, node.Key, nested))
@@ -70,9 +76,6 @@ func stringify(value interface{}, depth int) string {
 		}
 		return FormatStylish(nodes, depth)
 	case string:
-		if v == "" {
-			return ""
-		}
 		return v
 	case nil:
 		return "null"
